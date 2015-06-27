@@ -1,4 +1,8 @@
-# Path to your oh-my-zsh installation.
+# .zshrc
+# Maintainer: C4rt
+# version 0.4
+
+# Path to oh-my-zsh
 export ZSH=/home/C4rt/.oh-my-zsh
 export LC_ALL="fr_FR.utf8"
 
@@ -8,7 +12,7 @@ DISABLE_AUTO_UPDATE="true"
 
 plugins=(git autojump command-not-found compleat dirhistory screen web-search zsh-syntax-highlighting)
 
-# User configuration
+# Configuration
 
 export PATH=":/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/home/C4rt/bin:/home/C4rt/.rvm/bin:/usr/lib/oracle/12.1/client64/"
 
