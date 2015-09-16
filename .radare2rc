@@ -1,0 +1,16 @@
+# Show comments at right of disassembly
+e asm.cmtright=true
+
+# Shows pseudocode in disassembly.
+e asm.syntax = intel
+e asm.pseudo = true
+
+# Display (in V mode) stack and register values on top
+e cmd.stack = true
+
+#  Screen colors and Solarized theme
+e scr.color = true
+eco solarized
+
+# Use UTF-8
+e scr.utf8 = true
