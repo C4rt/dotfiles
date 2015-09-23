@@ -1,6 +1,6 @@
 "  .vimrc
 "  Maintainer: C4rt
-"  Version 0.3
+"  Version 0.4
 
 " NEOBUNDLE CONFIG  
 " Note: Skip initialization for vim-tiny or vim-small.
@@ -39,6 +39,8 @@ NeoBundle 'kevinw/pyflakes-vim'
 NeoBundle 'klen/python-mode'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'edkolev/tmuxline.vim'
+NeoBundle 'wincent/terminus'
+NeoBundle 'terryma/vim-multiple-cursors'
 call neobundle#end()
 " Required:
 filetype plugin indent on
