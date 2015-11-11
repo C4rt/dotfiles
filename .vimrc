@@ -1,6 +1,6 @@
 "  .vimrc
 "  Maintainer: C4rt
-"  Version 0.4
+"  Version 0.5
 
 " NEOBUNDLE CONFIG  
 " Note: Skip initialization for vim-tiny or vim-small.
@@ -41,6 +41,7 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'wincent/terminus'
 NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'vim-scripts/indentpython.vim'
 call neobundle#end()
 " Required:
 filetype plugin indent on
@@ -55,6 +56,16 @@ NeoBundleCheck
 " without
 " saving, and swap files will keep you safe if your computer crashes.
 set hidden
+
+" Undodir Config
+set undofile
+set undodir=~/.vim/undodir 
+
+" Terminus Config
+let g:TerminusCursorShape = 1
+let g:TerminusMouse = 1
+let g:TerminusFocusReporting = 1
+let g:TerminusBracketedPaste = 1
 
 " Vim-Notes Config
 let g:notes_directories = ['~/Notes']
@@ -74,10 +85,14 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_error_symbol = "✗"
+let g:syntastic_warning_symbol = "⚠"
+nnoremap <silent> <C-e> :<C-u>call ToggleErrors()<CR>
 
 " DISPLAY
+set background=dark
 " Better command-line completion
 set wildmenu
 
@@ -142,18 +157,18 @@ set laststatus=2
 set number
 
 " Mapping
- let mapleader = "\<Space>"
+let mapleader = "\<Space>"
  " Type <Space>o to open a new file:
- nnoremap <Leader>o :CtrlP<CR>
+nnoremap <Leader>o :CtrlP<CR>
 "  Type <Space>w to save file (a lot faster than :w<Enter>):
- nnoremap <Leader>w :w<CR>
+nnoremap <Leader>w :w<CR>
 "  Copy & paste to system clipboard with <Space>p and <Space>y:
- vmap <Leader>y "+y
- vmap <Leader>d "+d
- nmap <Leader>p "+p
- nmap <Leader>P "+P
- vmap <Leader>p "+p
- vmap <Leader>P "+P
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
@@ -164,18 +179,28 @@ nnoremap <F8> :sbnext<CR>
 nnoremap <S-F8> :sbprevious<CR>
 nmap <leader>n :tabnew<Enter>
 
+" Move to the next tab
+nnoremap <silent> <C-Up> :tabnext<cr>
+noremap <silent> <C-Up> <C-O>:tabnext<cr>
+noremap <silent> <C-Up> :<C-U>tabnext<cr>v
+
+" Move to the previous tab
+noremap <silent> <C-Down> :tabprevious<cr>
+noremap <silent> <C-Down> <C-O>:tabprevious<cr>
+noremap <silent> <C-Down> :<C-U>tabprevious<cr>v
+
 " Enter visual line mode with <Space><Space>:
- nmap <Leader><Leader> V
+nmap <Leader><Leader> V
 
 " Ctrl-A select all text
 map <C-a> <esc>ggVG<CR>
 
 " terryma/vim-expand-region with following mapping:
- vmap v <Plug>(expand_region_expand)
- vmap <C-v> <Plug>(expand_region_shrink)
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
 " It allows to:
 " Hit v to select one character
-" Hit vagain to expand selection to word
+" Hit v again to expand selection to word
 " Hit v again to expand to paragraph
 " Hit <C-v> go back to previous selection if I went too far
 
@@ -184,7 +209,7 @@ map <C-a> <esc>ggVG<CR>
 " search things usual way using /something
 " hit cs, replace first match, and hit <Esc>
 " hit n.n.n.n.n. reviewing and replacing all matches
- vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
      omap s :normal vs<CR>
 
@@ -244,6 +269,9 @@ let g:airline_powerline_fonits = 1
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
+let g:airline#extensions#tmuxline#enabled = 1
+" P-Menu black/white colors
+highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
 
 " unicode symbols
 let g:airline_left_sep = '»'
@@ -262,8 +290,6 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
-
-
 
 " Spell Check
 let b:myLang=0
@@ -314,11 +340,31 @@ function! CloseWindowOrKillBuffer()
 endfunction
 nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
 
+" copy-paste with xclip of x11 clipboard with F10
+vmap <F10> :!xclip -f -sel clip<CR>
+map <S-F10> :-1r !xclip -o -sel clip<CR>
+
 " Set window title by default.
 set title
 
 " Set lenght of lines
 set textwidth=120
+
+" PEP8 Python Indentation
+au BufNewFile,BufRead *.py
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+    \ set textwidth=79
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+" Full Stack Indentation
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
 
 " Always focus on splited window.
 nnoremap <C-w>s <C-w>s<C-w>w
@@ -334,5 +380,3 @@ nnoremap <C-w>v <C-w>v<C-w>w
 "  return "p@=RestoreRegister()\<cr>"
 "endfunction
 "vmap <silent> <expr> p <sid>Repl()
-
-
